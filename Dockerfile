@@ -22,4 +22,4 @@ RUN npm install
 COPY . .
 
 EXPOSE $PORT
-CMD [ "node", "./lib/index.js" ]
+CMD [ "node", "index.js" ]

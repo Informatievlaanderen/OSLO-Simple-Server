@@ -8,6 +8,8 @@ import tar from 'tar-fs';
 import { rimraf } from 'rimraf'
 import { CronJob } from 'cron';
 
+// initialize .env configuration
+require('dotenv').config();
 const program = new Command();
 
 // Enable this when testing server locally
@@ -22,14 +24,16 @@ program.on('--help', () => {
     console.log("It is used to provide an easy way to show a static folder, for example the dist folder after an npm build");
     console.log("The program can be executed as follows:");
     console.log("node index.js -p <path>");
-}); 
+});
 
 program.parse(process.argv);
 
+console.log(process.env.PORT)
+
 const app: Express = express();
 
-const PORT: string | number = process.env.ENV_PORT || 3000;
-const DOWNLOAD_URL: string | null = process.env.ENV_FILE_URL || "https://swarmstoraccount.blob.core.windows.net/oslo-standards-register/dist.tar";
+const PORT: string | number = process.env.PORT || 1000;
+const DOWNLOAD_URL: string | null = process.env.FILE_URL || "";
 const TARGET_DIR: string = '../dist';
 const FILENAME: string = 'dist.tar';
 const TMP_DIR: string = '../tmp';
