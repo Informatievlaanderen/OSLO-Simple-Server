@@ -10,13 +10,13 @@ quick setup: `npm run dev`
 ### Environment Variables
 You can specify the following environment variables in the .env file. Please refer to the `.env.example` file for an example.
 
-```bash
-PORT: The port on which the server runs. Default is 3000.
-TARGET_DIR: The directory that the server serves. Default is dist.
-TMP_DIR: The temporary directory used for downloading and extracting the updated content. Default is tmp.
-FILE_URL: The URL from which the server fetches the updated content.
-FILE_NAME: The name of the file that the server downloads from the FILE_URL. Default is dist.tar.
-```
+| Variable   | Description                                                                 | Default  |
+|------------|-----------------------------------------------------------------------------|----------|
+| `PORT`     | The port on which the server runs.                                          | `3000`   |
+| `TARGET_DIR` | The directory that the server serves.                                      | `dist`   |
+| `TMP_DIR`  | The temporary directory used for downloading and extracting updated content.| `tmp`    |
+| `FILE_URL` | The URL from which the server fetches the updated content.                  |   undefined       |
+| `FILE_NAME`| The name of the file that the server downloads from the `FILE_URL`.         | `dist.tar`|
 
 ## Docker
 
