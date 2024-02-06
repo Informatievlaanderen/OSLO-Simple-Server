@@ -27,5 +27,5 @@ docker build -t oslo-simple-server .
 
 ### Run the Docker container
 ```bash
-docker run -d -p 8080:3000 simple-server  # Replace 8080 with the port you want to use and 3000 with the port from your .env
+docker run -d -p 8080:3000 oslo-simple-server  # Replace 8080 with the port you want to use and 3000 with the port from your .env
 ```
