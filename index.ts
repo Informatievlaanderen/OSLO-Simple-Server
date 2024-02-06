@@ -1,4 +1,3 @@
-import { Command } from 'commander';
 import express, { Express } from 'express';
 import path from 'path';
 import chokidar from 'chokidar';
@@ -7,27 +6,10 @@ import fs from 'fs-extra';
 import tar from 'tar-fs';
 import { rimraf } from 'rimraf'
 import { CronJob } from 'cron';
+import dotenv from 'dotenv';
 
 // initialize .env configuration
-require('dotenv').config();
-const program = new Command();
-
-// Enable this when testing server locally
-// This can be deleted maybe? Project can be run now using npm run dev, in combination with the .env file
-
-program
-    .version('2.0.0')
-    .usage('serves the content in the dist folder, detects changes and automatically shows the new content')
-
-program.on('--help', () => {
-    console.log('');
-    console.log('This program is created for the Open Standards for Linked Organizations team.');
-    console.log("It is used to provide an easy way to show a static folder, for example the dist folder after an npm build");
-    console.log("The program can be executed as follows:");
-    console.log("node index.js");
-});
-
-program.parse(process.argv);
+dotenv.config();
 
 const app: Express = express();
 
