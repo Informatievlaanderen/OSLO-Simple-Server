@@ -10,7 +10,7 @@ quick setup: `npm run dev`
 ### Environment Variables
 You can specify the following environment variables in the .env file. Please refer to the `.env.example` file for an example.
 
-```
+```bash
 PORT: The port on which the server runs. Default is 3000.
 TARGET_DIR: The directory that the server serves. Default is dist.
 TMP_DIR: The temporary directory used for downloading and extracting the updated content. Default is tmp.
