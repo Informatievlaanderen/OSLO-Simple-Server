@@ -22,7 +22,7 @@ program.on('--help', () => {
     console.log("It is used to provide an easy way to show a static folder, for example the dist folder after an npm build");
     console.log("The program can be executed as follows:");
     console.log("node index.js -p <path>");
-});
+}); 
 
 program.parse(process.argv);
 
@@ -68,7 +68,7 @@ const fetchContent = (url: string, tmpDir: string): void => {
 
 fetchContent(DOWNLOAD_URL, TMP_DIR);
 
-const job = new CronJob('* * * * *', () => {
+const job = new CronJob('0 0 */1 * * *', () => {
     fetchContent(DOWNLOAD_URL, TMP_DIR);
 });
 job.start();
