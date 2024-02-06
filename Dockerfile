@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:18-alpine
 
 ARG PORT=3000
 ENV ENV_PORT=$PORT
@@ -22,4 +22,4 @@ RUN npm install
 COPY . .
 
 EXPOSE $PORT
-CMD [ "node", "./bin/index.js" ]
+CMD [ "node", "./lib/index.js" ]
