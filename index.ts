@@ -13,30 +13,34 @@ require('dotenv').config();
 const program = new Command();
 
 // Enable this when testing server locally
+// This can be deleted maybe? Project can be run now using npm run dev, in combination with the .env file
+
 program
     .version('2.0.0')
     .usage('serves the content in the dist folder, detects changes and automatically shows the new content')
-    .option('-p, --path <path>', 'path where the updated dist folder should be fetched periodically');
 
 program.on('--help', () => {
     console.log('');
     console.log('This program is created for the Open Standards for Linked Organizations team.');
     console.log("It is used to provide an easy way to show a static folder, for example the dist folder after an npm build");
     console.log("The program can be executed as follows:");
-    console.log("node index.js -p <path>");
+    console.log("node index.js");
 });
 
 program.parse(process.argv);
 
-console.log(process.env.PORT)
-
 const app: Express = express();
 
-const PORT: string | number = process.env.PORT || 1000;
+const PORT: string | number = process.env.PORT || 3000;
+const TARGET_DIR: string = path.join(__dirname, process.env.TARGET_DIR || 'dist');
+const TMP_DIR: string = path.join(__dirname, process.env.TMP_DIR || 'tmp');
 const DOWNLOAD_URL: string | null = process.env.FILE_URL || "";
-const TARGET_DIR: string = '../dist';
-const FILENAME: string = 'dist.tar';
-const TMP_DIR: string = '../tmp';
+const FILENAME: string = process.env.FILENAME || 'dist.tar';
+
+console.log(`[Server]: target directory: ${TARGET_DIR}`);
+console.log(`[Server]: tmp directory: ${TMP_DIR}`);
+console.log(`[Server]: download url: ${DOWNLOAD_URL}`);
+console.log(`[Server]: filename: ${FILENAME}`);
 
 const watcher = chokidar.watch(TARGET_DIR);
 watcher.on('ready', () => {
@@ -53,8 +57,27 @@ if (!DOWNLOAD_URL) {
     process.exit(1);
 }
 
+const createTmpDir = (dir: string): void => {
+    exec(`mkdir -p ${dir}`, (err: unknown) => {
+        if (err) {
+            console.log(`[Server]: an error occured while creating ${dir} directory.`);
+            console.log(err);
+            return;
+        }
+    });
+}
+
 const fetchContent = (url: string, tmpDir: string): void => {
-    exec('wget ' + url + ' -P ' + tmpDir, (err: any) => {
+    // Create the tmpDir directory if it doesn't exist
+    createTmpDir(tmpDir);
+    exec(`mkdir -p ${tmpDir}`, (err: unknown) => {
+        if (err) {
+            console.log(`[Server]: an error occured while creating ${tmpDir} directory.`);
+            console.log(err);
+            return;
+        }
+    });
+    exec(`wget ${url} -P ${tmpDir}`, (err: unknown) => {
         if (err) {
             console.log(`[Server]: an error occured while downloading ${url}.`);
             console.log(err);
@@ -62,10 +85,10 @@ const fetchContent = (url: string, tmpDir: string): void => {
         } else {
             console.log(`[Server]: done downloading.`);
             console.log(`[Server]: start extracting .tar folder to target directory: ${TARGET_DIR}`);
-            fs.createReadStream(tmpDir + '/' + FILENAME).pipe(tar.extract(TARGET_DIR));
+            fs.createReadStream(`${tmpDir}/${FILENAME}`).pipe(tar.extract(TARGET_DIR));
 
-            console.log(`[Server]: removing tmp directory`);
-            rimraf(TMP_DIR).then(() => console.log(`[Server]: done removing tmp directory`));
+            console.log(`[Server]: removing ${TMP_DIR} directory`);
+            rimraf(TMP_DIR).then(() => console.log(`[Server]: done removing ${TMP_DIR} directory`));
         }
     });
 }
@@ -77,7 +100,6 @@ const job = new CronJob('0 0 */1 * * *', () => {
 });
 job.start();
 
-
-app.use(express.static(path.join(__dirname, TARGET_DIR)));
+app.use(express.static(TARGET_DIR));
 console.log('Server running on port', PORT);
 app.listen(PORT);
